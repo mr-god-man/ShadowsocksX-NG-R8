@@ -54,7 +54,6 @@ class MainMenuManager: NSObject, NSUserNotificationCenterDelegate {
         InstallSSLocal { (s) in
             InstallPrivoxy { (ss) in
                 ProxyConfHelper.install()
-                Network.startWebServer()
             }
         }
         
@@ -62,11 +61,11 @@ class MainMenuManager: NSObject, NSUserNotificationCenterDelegate {
         defaults.register(defaults: [
             USERDEFAULTS_SHADOWSOCKS_ON: true,
             USERDEFAULTS_SHADOWSOCKS_RUNNING_MODE: "auto",
-            USERDEFAULTS_LOCAL_SOCKS5_LISTEN_PORT: NSNumber(value: 1086 as UInt16),
+            USERDEFAULTS_LOCAL_SOCKS5_LISTEN_PORT: NSNumber(value: 1086),
             USERDEFAULTS_LOCAL_SOCKS5_LISTEN_ADDRESS: "127.0.0.1",
             USERDEFAULTS_PAC_SERVER_LISTEN_ADDRESS: "127.0.0.1",
-            USERDEFAULTS_PAC_SERVER_LISTEN_PORT:NSNumber(value: 8090 as UInt16),
-            USERDEFAULTS_LOCAL_SOCKS5_TIMEOUT: NSNumber(value: 60 as UInt),
+            USERDEFAULTS_PAC_SERVER_LISTEN_PORT:NSNumber(value: 8090),
+            USERDEFAULTS_LOCAL_SOCKS5_TIMEOUT: NSNumber(value: 60),
             USERDEFAULTS_LOCAL_SOCKS5_ENABLE_UDP_RELAY: NSNumber(value: false as Bool),
             USERDEFAULTS_LOCAL_SOCKS5_ENABLE_VERBOSE_MODE: NSNumber(value: false as Bool),
             USERDEFAULTS_GFW_LIST_URL: "https://raw.githubusercontent.com/gfwlist/gfwlist/master/gfwlist.txt",
@@ -75,7 +74,7 @@ class MainMenuManager: NSObject, NSUserNotificationCenterDelegate {
             USERDEFAULTS_ACL_PROXY_BACK_CHN_URL:"https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/backcn-banAD.acl",
             USERDEFAULTS_AUTO_CONFIGURE_NETWORK_SERVICES: NSNumber(value: true as Bool),
             USERDEFAULTS_LOCAL_HTTP_LISTEN_ADDRESS: "127.0.0.1",
-            USERDEFAULTS_LOCAL_HTTP_LISTEN_PORT: NSNumber(value: 1087 as UInt16),
+            USERDEFAULTS_LOCAL_HTTP_LISTEN_PORT: NSNumber(value: 1087),
             USERDEFAULTS_LOCAL_HTTP_ON: true,
             USERDEFAULTS_LOCAL_HTTP_FOLLOW_GLOBAL: true,
             USERDEFAULTS_AUTO_CHECK_UPDATE: false,
@@ -88,7 +87,9 @@ class MainMenuManager: NSObject, NSUserNotificationCenterDelegate {
             USERDEFAULTS_REMOVE_NODE_AFTER_DELETE_SUBSCRIPTION:false,
             USERDEFAULTS_SERVERS_LIST_SHOW_SERVER_AND_PORT:true,
             USERDEFAULTS_OPEN_SERVERS_LIST_PRO_VIEW:false,
-            USERDEFAULTS_PROXY_EXCEPTIONS: "127.0.0.1,localhost,192.168.0.0/16,10.0.0.0/8,172.16.0.0/12,timestamp.apple.com"
+            USERDEFAULTS_PROXY_EXCEPTIONS: "127.0.0.1,localhost,192.168.0.0/16,10.0.0.0/8,172.16.0.0/12,timestamp.apple.com",
+            USERDEFAULTS_OPEN_WEBSERVERS:true,
+            USERDEFAULTS_WEBSERVERS_LISTEN_PORT:NSNumber(value: 45678)
         ])
         
         let notifyCenter = NotificationCenter.default
@@ -121,6 +122,11 @@ class MainMenuManager: NSObject, NSUserNotificationCenterDelegate {
             }
         }
         notifyCenter.addObserver(forName: NOTIFY_HTTP_CONF_CHANGED, object: nil, queue: nil) { (noti) in
+            if defaults.bool(forKey: USERDEFAULTS_OPEN_WEBSERVERS) {
+                Network.startWebServer()
+            } else {
+                Network.stopWebServer()
+            }
             SyncPrivoxy {
                 MainMenuManager.applyConfig { (s) in
                     self.refresh()
@@ -178,6 +184,10 @@ class MainMenuManager: NSObject, NSUserNotificationCenterDelegate {
             self.refresh()
             
             Shortcuts.bindShortcuts()
+            
+            if defaults.bool(forKey: USERDEFAULTS_OPEN_WEBSERVERS) {
+                Network.startWebServer()
+            }
             
             if defaults.bool(forKey: USERDEFAULTS_CONNECT_AT_LAUNCH) && ServerProfileManager.instance.getActiveProfileId() != "" {
                 defaults.set(false, forKey: USERDEFAULTS_SHADOWSOCKS_ON)

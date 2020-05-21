@@ -10,6 +10,7 @@
             <connections>
                 <outlet property="aclLoading" destination="wBt-7P-6Ty" id="s2v-Aw-bzk"/>
                 <outlet property="bypassProxyTextView" destination="wF7-r5-Hji" id="EWi-lK-San"/>
+                <outlet property="commandLinePort" destination="dbr-oV-RaL" id="1h2-qU-agz"/>
                 <outlet property="delayTestMethod" destination="y8o-bO-KiP" id="Q4y-Qg-gfY"/>
                 <outlet property="httpAddress" destination="wLh-IS-djV" id="6tN-2r-oqI"/>
                 <outlet property="httpPort" destination="aZc-Ie-bEU" id="9bg-HX-swp"/>
@@ -530,6 +531,44 @@ DQ
                                                 <outlet property="formatter" destination="aiT-a6-AS1" id="xj6-42-pvR"/>
                                             </connections>
                                         </textField>
+                                        <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ogw-yp-A70">
+                                            <rect key="frame" x="176" y="193" width="216" height="18"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <buttonCell key="cell" type="check" title="Open SSR Command Line Mode" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="0Um-J1-0kD">
+                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                            <connections>
+                                                <action selector="useSSRCommandTap:" target="-2" id="893-OJ-J7q"/>
+                                                <binding destination="WMo-Q4-0Pp" name="value" keyPath="values.USERDEFAULTS_OPEN_WEBSERVERS" id="5L5-7o-qlN"/>
+                                            </connections>
+                                        </button>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iyC-tX-iKM">
+                                            <rect key="frame" x="178" y="171" width="206" height="16"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" lineBreakMode="clipping" title="Command Line Mode Listen Port:" id="azc-WW-sg3">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dbr-oV-RaL">
+                                            <rect key="frame" x="178" y="142" width="169" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="eJg-HG-ac5">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                            <connections>
+                                                <binding destination="WMo-Q4-0Pp" name="value" keyPath="values.USERDEFAULTS_WEBSERVERS_LISTEN_PORT" id="vHa-XA-FmO">
+                                                    <dictionary key="options">
+                                                        <bool key="NSContinuouslyUpdatesValue" value="YES"/>
+                                                    </dictionary>
+                                                </binding>
+                                                <outlet property="formatter" destination="aiT-a6-AS1" id="J7o-vu-TJB"/>
+                                            </connections>
+                                        </textField>
                                     </subviews>
                                 </view>
                             </tabViewItem>
@@ -543,7 +582,7 @@ DQ
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <clipView key="contentView" id="Yw4-Zl-pfX">
                                                 <rect key="frame" x="1" y="1" width="404" height="152"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <autoresizingMask key="autoresizingMask"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" id="ZH6-U6-ROy">
                                                         <rect key="frame" x="0.0" y="0.0" width="404" height="152"/>
@@ -606,7 +645,7 @@ DQ
                                             <autoresizingMask key="autoresizingMask"/>
                                             <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="zqN-2z-R4u">
                                                 <rect key="frame" x="0.0" y="0.0" width="391" height="89"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <autoresizingMask key="autoresizingMask"/>
                                                 <subviews>
                                                     <textView importsGraphics="NO" richText="NO" verticallyResizable="YES" spellingCorrection="YES" smartInsertDelete="YES" id="wF7-r5-Hji">
                                                         <rect key="frame" x="0.0" y="0.0" width="391" height="89"/>

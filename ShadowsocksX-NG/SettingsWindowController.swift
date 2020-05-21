@@ -27,6 +27,7 @@ class SettingsWindowController: NSWindowController, NSWindowDelegate, NSTableVie
     
     @IBOutlet weak var httpAddress: NSTextField!
     @IBOutlet weak var httpPort: NSTextField!
+    @IBOutlet weak var commandLinePort: NSTextField!
     
     @IBOutlet var userRuleTestView: NSTextView!
     
@@ -64,6 +65,7 @@ class SettingsWindowController: NSWindowController, NSWindowDelegate, NSTableVie
         
         httpAddress.delegate = self
         httpPort.delegate = self
+        commandLinePort.delegate = self
         
         if let services = d.array(forKey: USERDEFAULTS_PROXY4_NETWORK_SERVICES) {
             selectedNetworkServices = NSMutableSet(array: services)
@@ -102,6 +104,7 @@ class SettingsWindowController: NSWindowController, NSWindowDelegate, NSTableVie
             }
         }
     }
+    
     func controlTextDidChange(_ obj: Notification) {
         if let t = obj.object as? NSTextField {
             switch t {
@@ -110,6 +113,18 @@ class SettingsWindowController: NSWindowController, NSWindowDelegate, NSTableVie
                 break
             case httpPort, httpAddress:
                 httpChanged = true
+                break
+            default:
+                break
+            }
+        }
+    }
+    
+    func controlTextDidEndEditing(_ obj: Notification) {
+        if let t = obj.object as? NSTextField {
+            switch t {
+            case commandLinePort:
+                Network.restart()
                 break
             default:
                 break
@@ -213,6 +228,10 @@ class SettingsWindowController: NSWindowController, NSWindowDelegate, NSTableVie
     }
     
     @IBAction func followGlobalModeTap(_ sender: NSButton) {
+        httpChanged = true
+    }
+    
+    @IBAction func useSSRCommandTap(_ sender: NSButton) {
         httpChanged = true
     }
     

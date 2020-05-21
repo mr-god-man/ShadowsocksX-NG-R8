@@ -57,6 +57,9 @@ class Network {
 extension Network {
     private static var webServer: GCDWebServer? = nil
     static func startWebServer() {
+        if let w = webServer, w.isRunning {
+            return
+        }
         webServer = GCDWebServer()
         webServer?.addDefaultHandler(forMethod: "GET", request: GCDWebServerRequest.self) { (request, completionBlock) in
             switch request.path {
@@ -85,7 +88,8 @@ extension Network {
             }
         }
         do {
-            try webServer?.start(options: ["BindToLocalhost":NSNumber(value: true), "Port":NSNumber(value: 45678)])
+            let port = UserDefaults.standard.integer(forKey: USERDEFAULTS_WEBSERVERS_LISTEN_PORT)
+            try webServer?.start(options: ["BindToLocalhost":NSNumber(value: true), "Port":NSNumber(value: port)])
             print("Visit \(webServer?.serverURL?.absoluteString ?? "") in your web browser")
         } catch let e {
             print("\(e.localizedDescription)")
@@ -97,6 +101,13 @@ extension Network {
             w.stop()
         }
         webServer = nil
+    }
+    
+    static func restart() {
+        Network.stopWebServer()
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+1) {
+            Network.startWebServer()
+        }
     }
     
     private static func handlePath(_ path: String, finish: @escaping (GCDWebServerResponse)->()) {

@@ -136,7 +136,7 @@ class ConnectTestigManager {
     private var tcping: Tcping?
     private var ping: PingServers?
     
-    func start() {
+    func start(finish: @escaping()->()) {
         if !isTesting {
             isTesting = true
             if UserDefaults.standard.bool(forKey: USERDEFAULTS_TCP) {
@@ -145,6 +145,7 @@ class ConnectTestigManager {
                     isTesting = false
                     NotificationCenter.default.post(name: NOTIFY_UPDATE_MAINMENU, object: nil)
                     self.tcping = nil
+                    finish()
                 }
             } else {
                 self.ping = PingServers()
@@ -152,6 +153,7 @@ class ConnectTestigManager {
                     isTesting = false
                     NotificationCenter.default.post(name: NOTIFY_UPDATE_MAINMENU, object: nil)
                     self.ping = nil
+                    finish()
                 }
             }
         }

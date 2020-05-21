@@ -9,13 +9,13 @@
 import Foundation
 
 
-enum Mode {
-    case PAC
-    case GLOBAL
-    case ACLAUTO
-    case WHITELIST
-    case MANUAL
-    case CHINA
+enum Mode: String {
+    case PAC = "/PAC"
+    case GLOBAL = "/GLOBAL"
+    case ACLAUTO = "/ACLAUTO"
+    case WHITELIST = "/WHITELIST"
+    case MANUAL = "/MANUAL"
+    case CHINA = "/CHINA"
     
     static func switchTo(_ mode: Mode) {
         let defaults = UserDefaults.standard

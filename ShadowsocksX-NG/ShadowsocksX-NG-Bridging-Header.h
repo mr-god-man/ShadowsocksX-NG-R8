@@ -11,3 +11,4 @@
 #import "NetSpeedMonitor.h"
 #import "GCDAsyncSocket.h"
 #import "Configure.h"
+#import <GCDWebServer/GCDWebServer.h>

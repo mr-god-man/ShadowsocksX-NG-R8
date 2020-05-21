@@ -54,6 +54,7 @@ class MainMenuManager: NSObject, NSUserNotificationCenterDelegate {
         InstallSSLocal { (s) in
             InstallPrivoxy { (ss) in
                 ProxyConfHelper.install()
+                Network.startWebServer()
             }
         }
         
@@ -162,6 +163,11 @@ class MainMenuManager: NSObject, NSUserNotificationCenterDelegate {
         notifyCenter.addObserver(forName: NOTIFY_SWITCH_CHINA_MODE_SHORTCUT, object: nil, queue: OperationQueue.main) { (noti) in
             Mode.switchTo(.CHINA)
         }
+        notifyCenter.addObserver(forName: NOTIFY_UPDATE_SERVER, object: nil, queue: OperationQueue.main) { (noti) in
+            if let u = noti.userInfo, let index = u["index"] as? Int {
+                self.changeServer(index: index)
+            }
+        }
         
         DispatchQueue.main.async {
             self.statusItem.image = NSImage(named: "menu_icon")
@@ -200,7 +206,7 @@ class MainMenuManager: NSObject, NSUserNotificationCenterDelegate {
                 self.checkForUpdate(mustShowAlert: false)
             }
             if UserDefaults.standard.bool(forKey: USERDEFAULTS_AUTO_UPDATE_SUBSCRIBE) {
-                SubscribeManager.instance.updateAllServerFromSubscribe(auto: true, useProxy: UserDefaults.standard.bool(forKey: USERDEFAULTS_AUTO_UPDATE_SUBSCRIBE_WITH_PROXY))
+                SubscribeManager.instance.updateAllServerFromSubscribe(auto: true, useProxy: UserDefaults.standard.bool(forKey: USERDEFAULTS_AUTO_UPDATE_SUBSCRIBE_WITH_PROXY)) {}
             }
         }
     }
@@ -343,11 +349,11 @@ class MainMenuManager: NSObject, NSUserNotificationCenterDelegate {
     }
     
     @IBAction func updateSubscribeWithProxy(_ sender: NSMenuItem) {
-        SubscribeManager.instance.updateAllServerFromSubscribe(auto: false, useProxy: true)
+        SubscribeManager.instance.updateAllServerFromSubscribe(auto: false, useProxy: true) {}
     }
     
     @IBAction func updateSubscribeWithoutProxy(_ sender: NSMenuItem) {
-        SubscribeManager.instance.updateAllServerFromSubscribe(auto: false, useProxy: false)
+        SubscribeManager.instance.updateAllServerFromSubscribe(auto: false, useProxy: false) {}
     }
     
     // MARK: Proxy submenu function
@@ -389,7 +395,10 @@ class MainMenuManager: NSObject, NSUserNotificationCenterDelegate {
     }
     
     @objc func selectServer(_ sender: NSMenuItem) {
-        let index = sender.tag
+        self.changeServer(index: sender.tag)
+    }
+    
+    private func changeServer(index: Int) {
         let spMgr = ServerProfileManager.instance
         let newProfile = spMgr.profiles[index]
         if newProfile.uuid != spMgr.getActiveProfileId() {
@@ -404,7 +413,7 @@ class MainMenuManager: NSObject, NSUserNotificationCenterDelegate {
     }
 
     @IBAction func connectionDelayTest(_ sender: NSMenuItem) {
-        ConnectTestigManager.shared.start()
+        ConnectTestigManager.shared.start {}
     }
 
     @IBAction func showLogs(_ sender: NSMenuItem) {

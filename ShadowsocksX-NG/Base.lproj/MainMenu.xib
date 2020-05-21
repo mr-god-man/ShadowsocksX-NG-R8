@@ -106,7 +106,7 @@
                 </menuItem>
                 <menuItem title="Subscribers" id="y1d-RF-NOg">
                     <modifierMask key="keyEquivalentModifierMask"/>
-                    <menu key="submenu" id="odt-p2-f7T">
+                    <menu key="submenu" title="Subscribers" id="odt-p2-f7T">
                         <items>
                             <menuItem title="⚙ Edit Subscribe Feed" id="h7h-M2-FDZ">
                                 <modifierMask key="keyEquivalentModifierMask"/>

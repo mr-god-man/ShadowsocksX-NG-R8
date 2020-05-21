@@ -58,7 +58,7 @@ class SubscribeManager:NSObject{
         }
         return ret
     }
-    func updateAllServerFromSubscribe(auto: Bool, useProxy: Bool = true) {
+    func updateAllServerFromSubscribe(auto: Bool, useProxy: Bool = true, finish:@escaping ()->()) {
         let group = DispatchGroup()
         let queue = DispatchQueue.global(qos: DispatchQoS.QoSClass.userInteractive)
         for item in subscribes {
@@ -86,7 +86,11 @@ class SubscribeManager:NSObject{
             //更新订阅后存一下组名
             self.save()
             if UserDefaults.standard.bool(forKey: USERDEFAULTS_SPEED_TEST_AFTER_SUBSCRIPTION) {
-                ConnectTestigManager.shared.start()
+                ConnectTestigManager.shared.start {
+                    finish()
+                }
+            } else {
+                finish()
             }
         }
     }
